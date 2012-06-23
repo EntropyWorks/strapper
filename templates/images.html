@@ -1,0 +1,48 @@
+{% include "header.html" %}
+<h1>Available images</h1>
+<h2>and releases</h2>
+<br/>
+
+{% for image in images %}
+  <h3>{{ image }}</h3>
+  {% if images[image] %}
+    <ul>
+    {% for version in images[image] %}
+      <li>{{ version }}</li>
+      <!--
+      {% if images[image][version] %}
+        <table class="table table-striped">
+          <tr>
+            <th>Filename</th>
+            <th>Size</th>
+            <th>Modified</th>
+          </tr>
+          {% for file in images[image][version] %}
+            <tr>
+              <td>
+                {{ file }} 
+              </td>
+              <td>
+                {{ images[image][version][file].size }} 
+              </td>
+              <td>
+                {{ images[image][version][file].mtime_iso }}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% else %}
+        <div class="alert">
+          <i class="icon-warning-sign"></i> No files found in this release!
+        </div>
+      {% endif %}
+      -->
+    {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert">
+      <i class="icon-warning-sign"></i> No releases found of this image!
+    </div>
+  {% endif %}
+{% endfor %}
+{% include "footer.html" %}

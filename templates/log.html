@@ -1,0 +1,17 @@
+{% include "header.html" %}
+<h1>Log</h1>
+<br/>
+
+{% if log %}
+  <table class="table table-striped">
+  {% for line in log %}
+    <tr><td>{{ line }}</td></tr>
+  {% endfor %}
+  </table>
+{% else %}
+  <div class="alert">
+    <i class="icon-warning-sign"></i> No log entries found.
+  </div>
+{% endif %}
+
+{% include "footer.html" %}

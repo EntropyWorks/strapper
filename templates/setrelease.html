@@ -1,0 +1,103 @@
+{% include "header.html" %}
+{% if data['reverse'] %}
+  <h1>Node {{ data['reverse'] }}</h1>
+{% else %}
+  <h1>Node {{ mac }}</h1>
+{% endif %}
+<br/>
+
+{% if method == "GET" %}
+  {% if data %}
+    <form action="" method="POST">
+      <dl class="dl-horizontal">
+        <dt>Node group</dt>
+        <dd>
+          {% if data['group'] %}
+            <a href="/group/{{ data['group'] }}">{{ data['group'] }}</a>
+          {% else %}
+            <span class="label label-warning">Unable to lookup</span>
+          {% endif %}
+        </dd>
+
+        <dt>DNS PTR</dt>
+        <dd>
+          {% if data['reverse'] %}
+            {{ data['reverse'] }}
+          {% else %}
+            <span class="label label-warning">Unable to lookup</span>
+          {% endif %}
+        </dd>
+        <dt>MAC</dt>
+        <dd>{{ mac }}</dd>
+  
+        <br/>
+  
+        <dt>Current image<dt>
+        <dd>
+          {% if data['image'] %}
+            {{ data['image'] }}
+          {% else %}
+            <span class="label label-warning">Not configured</span>
+          {% endif %}
+        </dd>
+
+        <dt>Current release<dt>
+        <dd>
+          {% if data['release'] %}
+            {{ data['release'] }}
+          {% else %}
+            <span class="label label-warning">Not configured</span>
+          {% endif %}
+        </dd>
+  
+        <br/>
+  
+        <dt>Change release</dt>
+        <dd>
+          {% if releases %}
+            <div class="controls">
+              <select name="release">
+                  {% for release in releases %}
+                    {% if release == data['release'] %}
+                      <option selected="selected">{{ release }}</option>
+                    {% else %}
+                      <option>{{ release }}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+            </div>
+          {% else %}
+            <div class="alert">
+              <i class="icon-warning-sign"></i> No releases found of this image!
+            </div>
+          {% endif %}
+        </dd>
+  
+        <dt></dt>
+        <dd>
+          {% if releases %}
+            <input type="submit" value="Save!"/> or 
+          {% endif %}
+           go <a href="/node/{{ mac }}">back</a></dd>
+  
+      </dl>
+    </form>
+  
+  {% else %}
+    <div class="alert">
+      <i class="icon-warning-sign"></i> No node matched this MAC address!
+    </div>
+  {% endif %}
+{% else %}
+  {% if success %}
+    <div class="alert alert-success">
+      <i class="icon-ok"></i> MAC {{ mac }} associated to release {{ data['release'] }} of image {{ data['image'] }}!
+    </div>
+  {% else %}
+    <div class="alert alert-error">
+      <i class="icon-warning-sign"></i> Unable to associate MAC {{ mac }} to release {{ data['release'] }} of image {{ data['image'] }}!
+    </div>
+  {% endif %}
+  Go <a href="/node/{{ mac }}">back</a>
+{% endif %}
+{% include "footer.html" %}

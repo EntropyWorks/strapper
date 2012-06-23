@@ -1,0 +1,18 @@
+{% include "header.html" %}
+<h1>Logs</h1>
+<h2>by day</h2>
+<br/>
+
+{% if logs %}
+  <table class="table table-striped">
+  {% for log in logs %}
+    <tr><td><a href="/log/{{ log }}">{{ log }}</a></td></tr>
+  {% endfor %}
+  </table>
+{% else %}
+  <div class="alert">
+    <i class="icon-warning-sign"></i> No log files found.
+  </div>
+{% endif %}
+
+{% include "footer.html" %}

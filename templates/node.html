@@ -1,0 +1,83 @@
+{% include "header.html" %}
+{% if data['reverse'] %}
+  <h1>Node {{ data['reverse'] }}</h1>
+{% else %}
+  <h1>Node {{ mac }}</h1>
+{% endif %}
+<br/>
+
+{% if data %}
+  <dl class="dl-horizontal">
+    <dt>Node group</dt>
+    <dd>
+      {% if data['group'] %}
+        <a href="/group/{{ data['group'] }}">{{ data['group'] }}</a>
+      {% else %}
+        <span class="label label-warning">Unable to lookup</span>
+      {% endif %}
+    </dd>
+    <dt>DNS PTR</dt>
+    <dd>
+      {% if data['reverse'] %}
+        {{ data['reverse'] }}
+      {% else %}
+        <span class="label label-warning">Unable to lookup</span>
+      {% endif %}
+    </dd>
+    <dt>MAC<dt>
+    <dd>{{ mac }}</dd>
+    <br/>
+
+    <dt>Last boot</dt>
+    <dd>
+      {% if data['lastboot_iso'] %}
+        {{ data['lastboot_iso'] }}
+      {% else %}
+        Never
+      {% endif %}
+    </dd>
+
+    <dt>Current image<dt>
+    <dd>
+      {% if data['image'] %}
+        {{ data['image'] }}
+      {% else %}
+        <span class="label label-warning">Not configured</span>
+      {% endif %}
+      <a href="/setimage/{{ mac }}" rel="tooltip" title="Click to activate another image for this node."><i class="icon-wrench"></i></a>
+    </dd>
+
+    <dt>Current release</dt>
+    <dd>
+      {% if data['release'] and data['image'] %}
+        {{ data['release'] }}
+      {% else %}
+        <span class="label label-warning">Not configured</span>
+      {% endif %}
+      {% if data['image'] %}
+        <a href="/setrelease/{{ mac }}" rel="tooltip" title="Click to activate another release of {{ data['image'] }} for this node."><i class="icon-wrench"></i></a>
+      {% endif %}
+    </dd>
+
+    <br/>
+
+  </dl>
+
+  {% if not data['image'] %}
+    <div class="alert alert-info">
+      <strong>Tips!</strong> Associate this node to an <a href="/setimage/{{ mac }}">image</a> using the icon <a href="/setimage/{{ mac }}"><i class="icon-wrench"></i></a>.
+    </div>
+  {% endif %}
+
+  {% if data['image'] and not data['release'] %}
+    <div class="alert alert-info">
+      <strong>Tips!</strong> Associate this node to a <a href="/setrelease/{{ mac }}">release</a> of {{ data['image'] }} using the icon <a href="/setrelease/{{ mac }}"><i class="icon-wrench"></i></a>.
+    </div>
+  {% endif %}
+
+{% else %}
+  <div class="alert">
+    <i class="icon-warning-sign"></i> No node matched this MAC address!
+  </div>
+{% endif %}
+{% include "footer.html" %}

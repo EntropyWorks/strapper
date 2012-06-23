@@ -1,0 +1,73 @@
+{% include "header.html" %}
+<h1>Nodes in {{ group }}</h1>
+<br/>
+
+{% if nodegroup %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>MAC</th>
+        <th>IP address</th>
+        <th>DNS PTR</th>
+        <th>Boot #</th>
+        <th>Last boot request</th>
+        <th>Image</th>
+        <th>Release</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    {% for mac in nodegroup %}
+      <tr>
+      <td><a href="/node/{{ mac }}">{{ mac }}</a></td>
+      <td>{{ nodegroup[mac]['remote_addr'] }}</td>
+      <td>
+        {% if nodegroup[mac]['reverse'] %}
+          {{ nodegroup[mac]['reverse'] }}
+        {% else %}
+          <span class="label label-warning">Unable to lookup</span>
+        {% endif %}
+      </td>
+      <td>{{ nodegroup[mac]['bootcount'] }}</td>
+      <td>
+        {% if nodegroup[mac]['lastboot_iso'] %}
+          {{ nodegroup[mac]['lastboot_iso'] }}
+        {% else %}
+          Never
+        {% endif %}
+      </td>
+      <td>
+        {% if nodegroup[mac]['image'] %}
+          {{ nodegroup[mac]['image'] }}
+        {% else %}
+          <span class="label label-warning">Not configured</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if nodegroup[mac]['release'] %}
+          {{ nodegroup[mac]['release'] }}
+        {% else %}
+          <span class="label label-warning">Not configured</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if nodegroup[mac]['image'] and nodegroup[mac]['release'] %}
+          {% if nodegroup[mac]['saved'] and nodegroup[mac]['lastboot'] %}
+            {% if nodegroup[mac]['saved'] > nodegroup[mac]['lastboot'] %}
+              <span class="label label-important"><i class="icon-flag icon-white"></i> Pending change</span>
+            {% else %}
+              <span class="label label-success">OK</span>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <span class="label label-important">Not configured</span>
+        {% endif %}
+      </td>
+      <tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <div class="alert">
+    <i class="icon-warning-sign"></i> No nodes found in this group!
+  </div>
+{% endif %}
+{% include "footer.html" %}
