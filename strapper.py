@@ -351,6 +351,7 @@ def get_nodegroups():
 
     return nodegroups
 
+# Return an array containing the dates in which there are log entries.
 def get_logs():
     logs = []
 
@@ -363,10 +364,11 @@ def get_logs():
             res = rule.match(filename)
             if res.group(1):
                 day = res.group(1)
-                logs.append(day)
+                logs.insert(0,day)
             
     return logs
 
+# Return an array containing the log entries of a given date.
 def read_log(day):
     log = []
 
@@ -386,6 +388,7 @@ def read_log(day):
 
     return log
 
+# Write a log entry. Levels should be DEBUG, INFO, WARNING or ERROR.
 def do_log(level,text):
     now = datetime.datetime.now()
     logfile = '%s/strapper-%s.log' \
@@ -405,6 +408,7 @@ def do_log(level,text):
     else:
         return True
 
+# Give MAC addresses nice formatting.
 def clean_mac(mac):
     # Remove all uneccessary characters from the given mac address
     mac = re.sub('[^\d\w]', '', mac)
@@ -420,18 +424,6 @@ def clean_mac(mac):
     
     return mac
 
-#@app.before_request
-#def connect_db():
-#    g.db = Connection(config.DB_HOST,
-#                      config.DB_NAME,
-#                      config.DB_USER,
-#                      config.DB_PASSWD)
-
-#@app.after_request
-#def close_connection(response):
-#    g.db.close()
-#    return response
-
 @app.route("/")
 def index():
     nodegroups = get_nodegroups()
@@ -445,22 +437,19 @@ def group(group):
 @app.route("/images")
 def images():
     images = get_images_and_releases()
-    print images
-
     return render_template("images.html", images = images)
 
 @app.route("/log/<day>")
 def log(day):
     log = read_log(day)
-
     return render_template('log.html', log = log, day = day)
 
 @app.route("/logs")
 def logs():
     logs = get_logs()
-
     return render_template('logs.html', logs = logs)
 
+# Print the boot scripts to the nodes
 @app.route("/boot/<mac>")
 def boot(mac):
     script = False
@@ -514,15 +503,14 @@ def setrelease(mac):
                         success = True
 
     else:
-        if mac:
-            try:
-                data['image']
+        try:
+            data['image']
 
-            except:
-                pass
+        except:
+            pass
 
-            else:
-                releases = get_image_releases(data['image'])
+        else:
+            releases = get_image_releases(data['image'])
 
     try:
         reverse = socket.gethostbyaddr(data['remote_addr'])[0]
@@ -616,7 +604,6 @@ def node(mac):
     return render_template('node.html', data = data, mac = mac, \
        images = images, releases = releases)
     
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
 
