@@ -17,6 +17,7 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+# Return an array of the images available.
 def get_images():
     images = []
     basepath = app.config['IMAGEDIR']
@@ -28,6 +29,7 @@ def get_images():
             
     return images
 
+# Return an array of the releases available for a spesific image.
 def get_image_releases(image):
     releases = []
     basepath = '%s/%s' % (app.config['IMAGEDIR'],image)
@@ -39,6 +41,7 @@ def get_image_releases(image):
 
     return releases
 
+# Return a dict containing the releases (with files) of a spesific image.
 def get_image_release(image,release):
     files = {}
     basepath = '%s/%s/%s' % (app.config['IMAGEDIR'],image,release)
@@ -54,12 +57,14 @@ def get_image_release(image,release):
                  i['path'] = filepath
                  i['size'] = stat.st_size
                  i['mtime'] = stat.st_mtime
-                 i['mtime_iso'] = datetime.datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%S:%M")
+                 i['mtime_iso'] = datetime.datetime.fromtimestamp( \
+                     stat.st_mtime).strftime("%Y-%m-%d %H:%S:%M")
 
                  files[filename]=i
 
     return files
 
+# Return a default boot script.
 def boot_script_on_error(mac):
     text="""
 #!ipxe
@@ -70,6 +75,7 @@ reboot
 """ % (mac)
     return text
 
+# Save the data for a spesific MAC address.
 def save_data(mac,data):
     basepath = app.config['VARDIR']
 
@@ -79,6 +85,7 @@ def save_data(mac,data):
     data['saved'] = now.strftime("%Y%m%d%H%M%S")
     data['saved_iso'] = now.strftime("%Y-%m-%d %H:%M:%S")
 
+    # Fix the structure
     i = {} 
     i[mac] = data
 
@@ -87,8 +94,8 @@ def save_data(mac,data):
         content = json.dumps(i, indent=2, sort_keys=False)
 
         if os.path.isfile(filepath):
-            # The database entry file exists. A known MAC address.
-
+            # The database entry file exists, which means this is a known MAC 
+            # address.
             try:
                 f = open(filepath,'w+')
                 f.write(content)
@@ -100,12 +107,13 @@ def save_data(mac,data):
 
             else:
                 status = True
-                syslog.syslog(syslog.LOG_ERR,"%s: Configuration updated. " % \
+                syslog.syslog(syslog.LOG_INFO,"%s: Configuration updated. " % \
                     (mac))
 
         else:
-            # The database entry file exists. First time this MAC address
-            # contacts this strapper.
+            # The database entry file does not exist, which means that this
+            # is the first time this strapper receives a boot request from
+            # this MAC address.
             try:
                 f = open(filepath,'w')
                 f.write(content)
@@ -117,7 +125,7 @@ def save_data(mac,data):
 
             else:
                 status = True
-                syslog.syslog(syslog.LOG_ERR,"%s: Configuration created. " % \
+                syslog.syslog(syslog.LOG_INFO,"%s: Configuration created. " % \
                     (mac))
 
     else:
@@ -126,6 +134,7 @@ def save_data(mac,data):
 
     return status
 
+# Read the data for a spesific MAC address. Return a dict with the data.
 def read_data(mac):
     data = {}
     basepath = app.config['VARDIR']
@@ -156,6 +165,7 @@ def read_data(mac):
     
     return data
 
+# Return a dict containing all images and releases available.
 def get_images_and_releases():
     ret = {}
 
@@ -169,6 +179,7 @@ def get_images_and_releases():
 
     return ret
 
+# Return an array of all MAC addresses known by the strapper.
 def get_all_known_macs():
     macs = []
     basepath = '%s' % (app.config['VARDIR'])
@@ -196,6 +207,7 @@ def get_all_known_macs():
 
     return macs
 
+# Return the active boot script for a spesific MAC address.
 def get_boot_script(mac):
 
     # Serve some default script
@@ -261,6 +273,8 @@ def get_boot_script(mac):
 
     return script
 
+# Use the DNS PTR to create logical groups of nodes. This method converts fqdn
+# to group name.
 def extract_nodegroup_from_fqdn(fqdn):
     group = False
     rule = re.compile('^[^\.]+\.(.*)')
