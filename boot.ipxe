@@ -1,0 +1,34 @@
+#!ipxe
+
+# Try to receive a DHCP address
+dhcp || goto dhcp_failed
+
+# Ok, here we have an IP address.
+echo
+echo Your information (DHCP):
+echo ========================
+echo MAC address: ${net0/mac}
+echo IP address:  ${net0/ip}
+echo Gateway:     ${net0/gateway}
+echo Netmask:     ${net0/netmask}
+echo DNS:         ${dns}
+echo Domain:      ${domain}
+echo
+
+# Try to download kernel information
+kernel http://bootstrap/boot/${net0/mac} || goto kernel_failed
+boot
+
+:kernel_failed
+  echo
+  echo Unable to download boot instructions.
+  echo Will sleep for one minute and then reboot.
+  sleep 60
+  reboot
+
+:dhcp_failed
+  echo
+  echo DHCP failed. Will sleep for one minute and then reboot.
+  sleep 60
+  reboot
+
