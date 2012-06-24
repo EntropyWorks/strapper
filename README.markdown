@@ -6,7 +6,7 @@ Strapper is a web application to manage the mapping between MAC addresses and di
 Details
 =======
 
-Strapper reads the files matching /var/www/pxeboot/<image>/<release>/boot.pxe, and presents them as releases of different boot images. 
+Strapper reads the files matching /var/www/pxeboot/&lt;image&gt;/&lt;release&gt;/boot.pxe, and presents them as releases of different boot images. 
 
 Whenever a node requests boot configuration from http://bootstrap/boot/XX:XX:XX:XX:XX:XX (MAC address), it becomes visible in the web interface and can be mapped to an image and release. At the next boot request, the node will boot from the specific image.
 
