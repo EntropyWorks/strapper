@@ -201,10 +201,6 @@ def get_all_known_macs():
                         # Add the MAC address to the array
                         macs.append(content.keys()[0])
 
-        else:
-            script = f.read()
-            f.close()
-
     return macs
 
 # Return the active boot script for a spesific MAC address.
