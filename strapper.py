@@ -66,8 +66,7 @@ def get_image_release(image,release):
 
 # Return a default boot script.
 def boot_script_on_error(mac):
-    text="""
-#!ipxe
+    text="""#!ipxe
 echo Unable to deliver the boot configuration for %s.
 echo Will reboot in 60 seconds.
 sleep 60
