@@ -16,7 +16,7 @@
         <th>Status</th>
       </tr>
     </thead>
-    {% for mac in nodegroup %}
+    {% for mac in nodegroup | sort %}
       <tr>
       <td><a href="/node/{{ mac }}">{{ mac }}</a></td>
       <td>{{ nodegroup[mac]['remote_addr'] }}</td>

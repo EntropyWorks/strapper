@@ -10,7 +10,7 @@
         <th>Nodes</th>
       </tr>
     </thead>
-  {% for group in nodegroups %}
+  {% for group in nodegroups | sort %}
       <tr>
         <td>
           <a href="group/{{ group }}">

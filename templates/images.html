@@ -3,11 +3,11 @@
 <h2>and releases</h2>
 <br/>
 
-{% for image in images %}
+{% for image in images | sort %}
   <h3>{{ image }}</h3>
   {% if images[image] %}
     <ul>
-    {% for version in images[image] %}
+    {% for version in images[image] | sort(reverse = True) %}
       <li>{{ version }}</li>
       <!--
       {% if images[image][version] %}

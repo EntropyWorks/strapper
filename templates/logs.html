@@ -5,7 +5,7 @@
 
 {% if logs %}
   <table class="table table-striped">
-  {% for log in logs %}
+  {% for log in logs | sort(reverse = True) %}
     <tr><td><a href="/log/{{ log }}">{{ log }}</a></td></tr>
   {% endfor %}
   </table>
