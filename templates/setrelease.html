@@ -57,7 +57,7 @@
           {% if releases %}
             <div class="controls">
               <select name="release">
-                  {% for release in releases %}
+                  {% for release in releases | sort(reverse = True) %}
                     {% if release == data['release'] %}
                       <option selected="selected">{{ release }}</option>
                     {% else %}

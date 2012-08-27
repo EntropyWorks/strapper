@@ -47,7 +47,7 @@
           <div class="controls">
             <select name="image">
               {% if images %}
-                {% for image in images %}
+                {% for image in images | sort %}
                   {% if image == data['image'] %}
                     <option selected="selected">{{ image }}</option>
                   {% else %}
